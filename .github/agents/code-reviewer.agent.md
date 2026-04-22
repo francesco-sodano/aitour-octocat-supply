@@ -2,7 +2,7 @@
 name: Code Reviewer
 description: Automated pull request reviews focusing on quality, best practices, and maintainability
 model: claude-sonnet-4.5
-tools: ['read', 'github/*', 'search']
+tools: ['read', 'github/*', 'search', 'agent']
 agents: ['security-auditor', 'test-generator']
 ---
 

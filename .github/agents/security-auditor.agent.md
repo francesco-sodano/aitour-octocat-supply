@@ -2,7 +2,7 @@
 name: Security Auditor
 description: Identifies vulnerabilities, enforces OWASP compliance, and security best practices
 model: claude-sonnet-4.5
-tools: ['read', 'search', 'web', 'bash']
+tools: ['read', 'search', 'web', 'bash', 'agent']
 agents: ['code-reviewer']
 ---
 
