@@ -3,6 +3,7 @@
     "docker-compose.yml"
   ],
   "service": "dev",
+  "workspaceFolder": "/workspaces/aitour-octocat-supply",
   "forwardPorts": [
     3000,
     5137
@@ -58,8 +59,8 @@
     }
   },
   "postCreateCommand": "make install && make build",
-  // set the API port to public visibility
-  "postAttachCommand": "gh cs ports visibility 3000:public -c \"$CODESPACE_NAME\"",
+  // set the API port to public visibility (Codespaces only; no-op locally)
+  "postAttachCommand": "if [ -n \"$CODESPACE_NAME\" ]; then gh cs ports visibility 3000:public -c \"$CODESPACE_NAME\"; fi",
   "shutdownAction": "stopCompose",
   "hostRequirements": {
     "cpus": 4,

@@ -1,0 +1,22 @@
+# Default: let Git auto-detect text files and normalize to LF in the repo
+* text=auto eol=lf
+
+# Force LF for anything that must run on Linux
+*.sh        text eol=lf
+*.bash      text eol=lf
+Dockerfile  text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+Makefile    text eol=lf
+
+# Force CRLF for Windows-only files
+*.bat       text eol=crlf
+*.cmd       text eol=crlf
+*.ps1       text eol=crlf
+
+# Binary files — never touch these
+*.png       binary
+*.jpg       binary
+*.ico       binary
+*.pdf       binary
+*.zip       binary
