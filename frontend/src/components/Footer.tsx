@@ -73,12 +73,12 @@ const Footer: React.FC = () => {
               </li>
               <li>
                 <a href="#" className="hover:text-primary">
-                  Terms & Conditions
+                  Privacy Policy
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-primary">
-                  Privacy Policy
+                  Terms & Conditions
                 </a>
               </li>
             </ul>
