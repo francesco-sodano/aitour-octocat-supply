@@ -98,6 +98,105 @@ You can also use VS Code tasks and launch configurations:
 - `Cmd/Ctrl + Shift + P` -> `Run Task` -> `Build All`
 - Use the Debug panel to run `Start API & Frontend`
 
+## 🧪 End-to-End Testing (Playwright)
+
+This project uses [Playwright](https://playwright.dev) for end-to-end browser testing. All test files live in `frontend/tests/`.
+
+```
+frontend/tests/
+├── e2e/                   # Spec files grouped by feature
+│   ├── homepage.spec.ts
+│   └── product-navigation.spec.ts
+├── features/              # BDD feature files (Gherkin)
+│   └── product-navigation.feature
+├── fixtures/              # Shared Playwright fixtures
+│   └── test-fixtures.ts
+└── pages/                 # Page Object Models
+    ├── HomePage.ts
+    └── ProductsPage.ts
+```
+
+### Prerequisites
+
+Install Playwright browser binaries (first time only):
+
+```bash
+cd frontend
+npx playwright install chromium
+```
+
+### Running Tests Locally
+
+> Both the API (port 3000) and the frontend dev server (port 5137) must be running.  
+> Start them with `make dev` in the root, or run each separately:
+> - `make dev-api` (API on port 3000)
+> - `make dev-frontend` (frontend on port 5137)
+
+```bash
+# Run all E2E tests (auto-starts the dev servers via webServer config)
+make test-e2e
+
+# Or run directly from the frontend directory
+cd frontend
+npm run test:e2e
+
+# Run against already-running servers (skip the webServer launcher)
+cd frontend
+PLAYWRIGHT_WEB_SERVER=false npx playwright test
+
+# Run a specific spec file
+cd frontend
+PLAYWRIGHT_WEB_SERVER=false npx playwright test tests/e2e/homepage.spec.ts
+
+# Run only on Chromium
+cd frontend
+PLAYWRIGHT_WEB_SERVER=false npx playwright test --project=chromium
+
+# Interactive UI mode (great for debugging)
+cd frontend
+PLAYWRIGHT_WEB_SERVER=false npx playwright test --ui
+
+# Show the HTML report after a run
+cd frontend
+npx playwright show-report
+```
+
+### Running Tests in CI
+
+Set the environment variables before running:
+
+| Variable | Default | Description |
+|---|---|---|
+| `PLAYWRIGHT_BASE_URL` | `http://localhost:5137` | Base URL of the running frontend |
+| `PLAYWRIGHT_WEB_SERVER` | _(unset)_ | Set to `false` to skip the auto-started dev server |
+
+Example CI step (GitHub Actions):
+
+```yaml
+- name: Install dependencies
+  run: make install
+
+- name: Build
+  run: make build
+
+- name: Install Playwright browsers
+  run: cd frontend && npx playwright install --with-deps chromium
+
+- name: Start servers
+  run: make dev &
+
+- name: Run E2E tests
+  run: make test-e2e
+```
+
+### Test Artifacts
+
+After a run, Playwright writes artifacts to `frontend/test-results/` (gitignored) and an HTML report to `frontend/playwright-report/` (gitignored). Open the report with:
+
+```bash
+cd frontend && npx playwright show-report
+```
+
 ## 🛠️ MCP Server Setup (Optional)
 
 To showcase extended capabilities:
