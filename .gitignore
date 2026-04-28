@@ -46,3 +46,8 @@ api/data/
 *.db-shm
 
 tmp
+
+# Playwright
+frontend/test-results/
+frontend/playwright-report/
+frontend/.auth/

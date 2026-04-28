@@ -49,7 +49,7 @@ erDiagram
    make dev
    ```
 
-This will start both the API server (on port 3000) and the frontend development server (on port 5173).
+This will start both the API server (on port 3000) and the frontend development server (on port 5137).
 
 ### Available Make Commands
 
@@ -67,7 +67,8 @@ Key commands:
 - `make build` - Build both API and frontend for production
 - `make db-init` - Initialize database schema
 - `make db-seed` - Seed database with sample data
-- `make test` - Run all tests
+- `make test` - Run all unit/integration tests
+- `make test-e2e` - Run Playwright end-to-end tests
 - `make clean` - Clean build artifacts and dependencies
 
 ### Database Management
@@ -107,6 +108,58 @@ To showcase extended capabilities:
    - `MCP: List servers` -> `playwright` -> `Start server`
    - `MCP: List servers` -> `github` -> `Start server`
 3. Configure with a GitHub PAT (required for GitHub MCP server)
+
+## 🧪 End-to-End Testing (Playwright)
+
+The project uses [Playwright](https://playwright.dev) for end-to-end browser testing. Tests live under `frontend/tests/e2e/`.
+
+### Running tests locally
+
+1. Install dependencies (if not done already):
+
+   ```bash
+   make install
+   ```
+
+2. Install the Playwright browsers (one-time setup):
+
+   ```bash
+   cd frontend && npx playwright install chromium
+   ```
+
+3. Start the development environment and run the tests:
+
+   ```bash
+   # Option A – let Playwright start the dev servers automatically
+   make test-e2e
+
+   # Option B – start servers manually first, then run in fast mode
+   make dev          # in one terminal
+   cd frontend && PLAYWRIGHT_WEB_SERVER=false npm run test:e2e   # in another
+   ```
+
+### Test configuration
+
+The Playwright config lives at `frontend/playwright.config.ts`. Key settings:
+
+| Setting | Value |
+|---------|-------|
+| Base URL | `http://localhost:5137` (override with `PLAYWRIGHT_BASE_URL`) |
+| Web server auto-start | enabled by default; set `PLAYWRIGHT_WEB_SERVER=false` to skip |
+| Browsers | Chromium, Edge |
+| Test directory | `frontend/tests/e2e/` |
+| Traces / screenshots | captured on first retry / on failure |
+
+### Running in CI
+
+The CI workflow runs `make test-e2e`, which automatically starts the full dev stack (API + frontend) before executing tests. Ensure the following secrets/env vars are available if required by downstream steps:
+
+- `PLAYWRIGHT_BASE_URL` – override the base URL (optional; defaults to `http://localhost:5137`)
+- `PLAYWRIGHT_WEB_SERVER` – set to `false` if the server is already running in a prior step
+
+### Adding new tests
+
+Place new specs under `frontend/tests/e2e/` following the `kebab-case.spec.ts` naming convention. Refer to `frontend/tests/features/` for corresponding BDD feature files that document the user journeys.
 
 ## 📚 Documentation
 
