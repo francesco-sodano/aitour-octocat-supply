@@ -1,8 +1,15 @@
 import React from 'react';
 import { useTheme } from '../context/ThemeContext';
+import { API_BASE_URL, api } from '../api/config';
 
 const Footer: React.FC = () => {
   const { darkMode } = useTheme();
+
+  const handleTermsDownload = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const url = `${API_BASE_URL}${api.endpoints.termsDownload}?lang=en`;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
 
   return (
     <footer
@@ -73,12 +80,17 @@ const Footer: React.FC = () => {
               </li>
               <li>
                 <a href="#" className="hover:text-primary">
-                  Terms & Conditions
+                  Privacy Policy
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary">
-                  Privacy Policy
+                <a
+                  href="#"
+                  onClick={handleTermsDownload}
+                  className="hover:text-primary"
+                  title="Download Terms and Conditions"
+                >
+                  Terms &amp; Conditions
                 </a>
               </li>
             </ul>
