@@ -39,6 +39,10 @@ jspm_packages/
 dist/
 coverage/
 
+# Playwright
+test-results/
+playwright-report/
+
 # Database files
 api/data/
 *.db

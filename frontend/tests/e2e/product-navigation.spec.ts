@@ -11,63 +11,60 @@ import { test, expect } from '@playwright/test';
  */
 
 test.describe('Product catalog discovery', () => {
-  test.beforeEach(async ({ page }) => {
-    // Navigate away from about:blank so localStorage context is available
-    await page.goto('/');
-  });
-
   test('Navigate from the home page to the product catalog', async ({ page }) => {
     // Given I am on the home page
     await page.goto('/');
-    await expect(page.locator('h1:has-text("Smart Cat Tech")')).toBeVisible();
+    await expect(
+      page.getByRole('heading', { level: 1, name: /Smart Cat Tech/i }),
+    ).toBeVisible();
 
     // When I select the Products navigation link
-    await page.click('nav a:has-text("Products")');
+    await page.getByRole('navigation').getByRole('link', { name: /Products/i }).click();
 
     // Then I land on the product catalog page
     await expect(page).toHaveURL(/\/products/);
 
     // And I see the catalog header "Products"
-    await expect(page.locator('h1:has-text("Products")')).toBeVisible();
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Products' }),
+    ).toBeVisible();
   });
 
   test('Search for a product by name', async ({ page }) => {
     // Given I am viewing the product catalog
     await page.goto('/products');
-    await expect(page.locator('h1:has-text("Products")')).toBeVisible();
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Products' }),
+    ).toBeVisible();
 
     // And the catalog includes "SmartFeeder One"
-    // Wait for product grid to load
-    const productGrid = page.locator('div[class*="grid"]').filter({ hasText: 'SmartFeeder One' });
-    await expect(productGrid).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'SmartFeeder One' })).toBeVisible();
 
     // When I search for "SmartFeeder"
-    const searchInput = page.locator('input[aria-label="Search products"]');
-    await searchInput.fill('SmartFeeder');
+    await page.getByLabel('Search products').fill('SmartFeeder');
 
     // Then the results list shows "SmartFeeder One"
-    const productCard = page.locator('h3:has-text("SmartFeeder One")');
-    await expect(productCard).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'SmartFeeder One' })).toBeVisible();
 
     // And the product description is visible in the results
-    const description = page.locator('text=/AI-powered feeder.*nap cycles/i').first();
-    await expect(description).toBeVisible();
+    await expect(page.getByText(/AI-powered feeder/i).first()).toBeVisible();
   });
 
   test('Search for a product with no matches', async ({ page }) => {
     // Given I am viewing the product catalog
     await page.goto('/products');
-    await expect(page.locator('h1:has-text("Products")')).toBeVisible();
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Products' }),
+    ).toBeVisible();
 
     // Wait for initial products to load
-    await expect(page.locator('div[class*="grid"]').first()).toBeVisible();
+    await expect(page.getByLabel('Search products')).toBeVisible();
 
     // When I search for "Space Tuna"
-    const searchInput = page.locator('input[aria-label="Search products"]');
-    await searchInput.fill('Space Tuna');
+    await page.getByLabel('Search products').fill('Space Tuna');
 
     // Then I see the empty state message "No products found"
-    const emptyState = page.locator('[role="status"]');
+    const emptyState = page.getByRole('status');
     await expect(emptyState).toContainText('No products found');
 
     // And I am prompted to adjust the search filters

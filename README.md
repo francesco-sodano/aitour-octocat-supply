@@ -108,6 +108,61 @@ To showcase extended capabilities:
    - `MCP: List servers` -> `github` -> `Start server`
 3. Configure with a GitHub PAT (required for GitHub MCP server)
 
+## 🧪 End-to-End Testing
+
+The project uses [Playwright](https://playwright.dev/) for end-to-end browser testing. Tests live in `frontend/tests/e2e/` and run against a local development environment.
+
+### Running E2E Tests
+
+1. Install Playwright browsers (first time only):
+
+   ```bash
+   cd frontend && npx playwright install chromium
+   ```
+
+2. Run all E2E tests (automatically starts dev servers):
+
+   ```bash
+   make test-e2e
+   ```
+
+   Or from the frontend directory:
+
+   ```bash
+   cd frontend && npm run test:e2e
+   ```
+
+3. Run tests against an already-running dev server:
+
+   ```bash
+   cd frontend && PLAYWRIGHT_WEB_SERVER=false npx playwright test
+   ```
+
+4. Run a single test file:
+
+   ```bash
+   cd frontend && npx playwright test tests/e2e/homepage.spec.ts
+   ```
+
+5. Run in headed mode for debugging:
+
+   ```bash
+   cd frontend && npx playwright test --headed
+   ```
+
+6. View the HTML test report:
+
+   ```bash
+   cd frontend && npx playwright show-report
+   ```
+
+### Configuration
+
+- **Config file:** `frontend/playwright.config.ts`
+- **Browsers:** Chromium and Edge
+- **Base URL:** `http://localhost:5137` (override with `PLAYWRIGHT_BASE_URL` env var)
+- **Web server:** Automatically starts via `make dev`; disable with `PLAYWRIGHT_WEB_SERVER=false`
+
 ## 📚 Documentation
 
 - [Detailed Architecture](./docs/architecture.md)
