@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useTheme } from '../context/ThemeContext';
+import { calculateDiscountedPrice } from '../utils/price';
 
 export default function Cart() {
   const { items, removeItem, updateQuantity, clearCart, totalPrice } = useCart();
@@ -49,10 +50,7 @@ export default function Cart() {
               className={`rounded-lg overflow-hidden shadow-sm border ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}
             >
               {items.map((item, index) => {
-                const unitPrice =
-                  item.discount != null && item.discount > 0
-                    ? item.price * (1 - item.discount)
-                    : item.price;
+                const unitPrice = calculateDiscountedPrice(item.price, item.discount);
                 return (
                   <div
                     key={item.productId}
@@ -89,6 +87,7 @@ export default function Cart() {
                       <span
                         className={`min-w-[1.5rem] text-center text-sm ${darkMode ? 'text-light' : 'text-gray-800'}`}
                         aria-label={`Quantity of ${item.name}`}
+                        aria-live="polite"
                       >
                         {item.quantity}
                       </span>
@@ -130,10 +129,11 @@ export default function Cart() {
                 <span className="text-primary">${totalPrice.toFixed(2)}</span>
               </div>
               <button
-                className="mt-4 w-full bg-primary hover:bg-accent text-white py-2 rounded-md font-medium transition-colors"
-                onClick={() => alert('Checkout is not yet implemented.')}
+                className="mt-4 w-full bg-gray-300 text-gray-500 py-2 rounded-md font-medium cursor-not-allowed"
+                disabled
+                title="Checkout is not yet implemented"
               >
-                Proceed to Checkout
+                Proceed to Checkout (Coming Soon)
               </button>
             </div>
           </div>
